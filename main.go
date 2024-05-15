@@ -34,8 +34,6 @@ func main() {
 	postRouter.HandleFunc("/", ph.AddProduct)
 	postRouter.Use(ph.MiddlewareValidateProduct)
 
-	println("helloworld")
-
 	// Create a local server, with binding address: port 9090
 	s := &http.Server{
 		Addr:         ":9090",
