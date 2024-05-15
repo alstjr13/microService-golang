@@ -2,20 +2,24 @@ package handlers
 
 import (
 	"log"
-	"module/data"
 	"net/http"
+	"product-api/data"
 	"regexp"
 	"strconv"
 )
 
+// Products : http.Handler
 type Products struct {
 	l *log.Logger
 }
 
+// NewProducts : creates a products handler with the given logger
 func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
 
+// ServeHTTP : the main entry point for the handler and satisties the http.Handler
+// interface
 func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		p.getProducts(rw, r)
@@ -55,13 +59,9 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		}
 
 		p.updateProducts(id, rw, r)
-
-		//p.updateProducts(id, rw http.ResponseWriter, r*http.Request)
-		//return
+		return
 
 	}
-
-	// Handle an update
 
 	// catch all
 	rw.WriteHeader(http.StatusMethodNotAllowed)
@@ -79,7 +79,9 @@ func (p *Products) getProducts(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Products) addProduct(rw http.ResponseWriter, r *http.Request) {
+
 	p.l.Println("Handle POST Product")
+
 	prod := &data.Product{}
 
 	err := prod.FromJSON(r.Body)
@@ -88,12 +90,10 @@ func (p *Products) addProduct(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Unable to unmarshal json", http.StatusBadRequest)
 	}
 
-	// Store
-
-	p.l.Printf("Prod: %#v", prod)
 	data.AddProduct(prod)
 }
 
+// updateProducts :
 func (p Products) updateProducts(id int, rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("Handle PUT Product")
 
@@ -107,6 +107,11 @@ func (p Products) updateProducts(id int, rw http.ResponseWriter, r *http.Request
 	err = data.UpdateProduct(id, prod)
 	if err == data.ErrProductNotFound {
 		http.Error(rw, "Product Not Found", http.StatusInternalServerError)
+		return
+	}
+
+	if err != nil {
+		http.Error(rw, "Product not found", http.StatusInternalServerError)
 		return
 	}
 }

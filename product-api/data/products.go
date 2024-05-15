@@ -26,6 +26,7 @@ func (p *Product) FromJSON(r io.Reader) error {
 // Products: Collection of Product
 type Products []*Product
 
+// toJSON : serialized the contents of the collection to JSON
 func (p *Products) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(p)
@@ -91,5 +92,21 @@ var productList = []*Product{
 		SKU:         "fjd34",
 		CreatedOn:   time.Now().UTC().String(),
 		UpdatedOn:   time.Now().UTC().String(),
+	},
+
+	// Iced Americano
+	&Product{
+		ID:          3,
+		Name:        "Ice Americano",
+		Description: "Espresso with ice and water",
+		Price:       3.99,
+		SKU:         "iam35",
+		CreatedOn:   time.Now().UTC().String(),
+		UpdatedOn:   time.Now().UTC().String(),
+	},
+
+	&Product{
+		ID:   4,
+		Name: "",
 	},
 }
