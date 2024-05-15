@@ -23,14 +23,14 @@ func (p *Product) FromJSON(r io.Reader) error {
 	return e.Decode(p)
 }
 
-// Products: Collection of Product
-type Products []*Product
-
-// toJSON : serialized the contents of the collection to JSON
+// ToJSON : serialized the contents of the collection to JSON
 func (p *Products) ToJSON(w io.Writer) error {
 	e := json.NewEncoder(w)
 	return e.Encode(p)
 }
+
+// Products: Collection of Product
+type Products []*Product
 
 func GetProducts() Products {
 	return productList
