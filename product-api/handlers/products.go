@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"microservice-golang/product-api/data"
 	"net/http"
@@ -21,18 +22,19 @@ func NewProducts(l *log.Logger) *Products {
 }
 
 func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
+	p.l.Println("Handle GET Products")
 	// Get request
 	lp := data.GetProducts()
 
+	// serialize the list to JSON
 	err := lp.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to Marshal JSON", http.StatusInternalServerError)
+		http.Error(rw, "Unable to marshal json", http.StatusInternalServerError)
 	}
 }
 
 func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
-
 	p.l.Println("Handle POST Product")
 
 	prod := &data.Product{}
@@ -80,6 +82,14 @@ func (p Products) MiddlewareValidateProduct(next http.Handler) http.Handler {
 		if err != nil {
 			p.l.Println("[ERROR] Deserializing product", err)
 			http.Error(rw, "Error reading product", http.StatusBadRequest)
+			return
+		}
+
+		// validate the product
+		err = prod.Validate()
+		if err != nil {
+			p.l.Println("[ERROR] validating product", err)
+			http.Error(rw, fmt.Sprintf("Error validating product: %s", err), http.StatusBadRequest)
 			return
 		}
 
