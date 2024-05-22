@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
+	"handlers"
 	"log"
-	"microservice-golang/product-api/handlers"
 	"net/http"
 	"os"
 	"os/signal"
