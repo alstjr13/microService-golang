@@ -13,7 +13,8 @@ type ValidationError struct {
 }
 
 func (v ValidationError) Error() string {
-	return fmt.Sprintf("Key: '%s' Error: Field validation for '%s' failed on the '%s' tag",
+	return fmt.Sprintf(
+		"Key: '%s' Error: Field validation for '%s' failed on the '%s' tag",
 		v.Namespace(),
 		v.Field(),
 		v.Tag(),
@@ -24,7 +25,7 @@ func (v ValidationError) Error() string {
 type ValidationErrors []ValidationError
 
 // Errors converts the slice into a string slice
-func (v ValidationErrors) Errors() []string {
+func (v ValidationErrors) Error() []string {
 	errs := []string{}
 	for _, err := range v {
 		errs = append(errs, err.Error())

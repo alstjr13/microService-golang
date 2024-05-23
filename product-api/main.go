@@ -31,12 +31,12 @@ func main() {
 
 	// Put Router
 	putRouter := sm.Methods(http.MethodPut).Subrouter()
-	putRouter.HandleFunc("/{id:[0-9]+}", ph.UpdateProducts)
+	putRouter.HandleFunc("/products", ph.Update)
 	putRouter.Use(ph.MiddlewareValidateProduct)
 
 	// Post Router
 	postRouter := sm.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/", ph.AddProduct)
+	postRouter.HandleFunc("/products", ph.Create)
 	postRouter.Use(ph.MiddlewareValidateProduct)
 
 	// Create a local server, with binding address: port 9090
